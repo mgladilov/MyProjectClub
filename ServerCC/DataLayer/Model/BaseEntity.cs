@@ -3,7 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataLayer.Model
 {
-	public class BaseEntity
+	public interface IBaseEntity
+	{
+		int Id { get; set; }
+
+		bool IsDeleted { get; set; }
+	}
+	
+	public class BaseEntity : IBaseEntity
 	{
 		[Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		[Column("Id")]

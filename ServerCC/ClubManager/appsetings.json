@@ -1,0 +1,6 @@
+﻿{
+    "ConnectionStrings": 
+    {
+        "Sql": "Data Source=DESKTOP-2KBGUT9;Initial Catalog=gc;Integrated Security=True"
+    }
+}
