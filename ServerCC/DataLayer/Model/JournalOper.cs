@@ -1,10 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DataLayer.Model
+namespace BusinessLayer.Models
 {
 	[Table("JournalOpers", Schema = "dbo")]
-	public class JournalOper : BaseEntity
+	public class JournalOper : BaseModel
 	{
 		[Column("Summa")]
 		public float Summa { get; set; }

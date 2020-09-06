@@ -5,7 +5,7 @@ using AutoMapper;
 using BusinessLayer.Extensions;
 using BusinessLayer.Models;
 using DataLayer;
-using DataLayer.Model;
+using MahApps.Metro.Controls;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 
@@ -14,7 +14,7 @@ namespace ClubManager
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
-	public partial class MainWindow : Window
+	public partial class MainWindow : MetroWindow
 	{
 		private readonly DataBaseContext _context;
 		private readonly IMapper _mapper;

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DataLayer.Model
+namespace BusinessLayer.Models
 {
 	[Table("ComputerGroups", Schema = "dbo")]
-	public class ComputerGroup : BaseEntity
+	public class ComputerGroup : BaseModel
 	{ 
 		[Column("Name")]
 		public string Name { get; set; }

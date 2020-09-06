@@ -1,4 +1,4 @@
-﻿using DataLayer.Model;
+﻿using BusinessLayer.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataLayer
