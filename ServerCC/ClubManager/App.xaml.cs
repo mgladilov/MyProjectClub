@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using AutoMapper;
+using ClubManager.ViewModel;
 using DataLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -54,6 +55,7 @@ namespace ClubManager
 
 		private void ConfigureServices(ServiceCollection services)
 		{
+			services.AddSingleton<MainWindowView>();
 			services.AddTransient<MainWindow>();
 		}
 	}
