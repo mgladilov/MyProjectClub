@@ -10,7 +10,7 @@
     <Window.DataContext>
         <local:MainWindowView/>
     </Window.DataContext>
-            <Window.Resources>
+    <Window.Resources>
         <CollectionViewSource x:Key="Groups" Source="{Binding ComputersGroups}"></CollectionViewSource>
     </Window.Resources>
 
@@ -20,10 +20,11 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Path=Computers}" SelectedItem="{Binding Path=SelectedComputer}" Margin="0,0,0,54">
+        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Path=Computers}" SelectedItem="{Binding Path=SelectedComputer}" Margin="0,0,0,54" Grid.Row="1">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Path=Number}" Header="№" Width="100"/>
                 <DataGridTextColumn Binding="{Binding Path=IpAddress}" Header="IP" Width="200"/>
@@ -32,7 +33,7 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Grid Grid.Row="0" Grid.Column="1">
+        <Grid Grid.Row="1" Grid.Column="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -52,10 +53,17 @@
             <ComboBox Grid.Row="2" Grid.Column="1" Margin="5" ItemsSource="{Binding Path=ComputersGroups}" DisplayMemberPath="Name" SelectedItem="{Binding Path=SelectedComputer.ComputerGroup,  UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
 
-        <StackPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"  HorizontalAlignment="Right" Margin="10"  Orientation="Horizontal">
+        <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"  HorizontalAlignment="Right" Margin="10"  Orientation="Horizontal">
             <Button Content="Обновить" Command="{Binding Path=Update}" />
             <Button Content="Удалить" Command="{Binding Path=Delete}"/>
         </StackPanel>
+
+        <Menu Grid.Row="0" Grid.Column="0" Height="30" VerticalAlignment="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="Exit" ></MenuItem>
+            </MenuItem>
+            <MenuItem Header="Настройки" Command="{Binding Path=Setting}"></MenuItem>
+        </Menu>
 
     </Grid>
 </mah:MetroWindow>

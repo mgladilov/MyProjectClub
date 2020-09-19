@@ -1,10 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BusinessLayer.Models
+namespace DataLayer.Model
 {
 	[Table("TarifIntervals", Schema = "dbo")]
-	public class TarifInterval : BaseModel
+	public class TarifInterval : BaseEntity
 	{
 		[Column("IdTarifs")]
 		public int IdTarifs { get; set; }

@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using AutoMapper;
 using ClubManager.ViewModel;
+using ClubManager.ViewModel.Settings;
 using DataLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -56,7 +54,11 @@ namespace ClubManager
 		private void ConfigureServices(ServiceCollection services)
 		{
 			services.AddSingleton<MainWindowView>();
+			services.AddTransient<SettingsWindow>();
 			services.AddTransient<MainWindow>();
+			services.AddSingleton<SettingView>();
+			services.AddSingleton<ComputerTabView>();
+			services.AddSingleton<AccountTabView>();
 		}
 	}
 }

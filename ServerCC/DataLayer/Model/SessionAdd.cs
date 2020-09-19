@@ -1,10 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BusinessLayer.Models
+namespace DataLayer.Model
 {
 	[Table("SessionAdd", Schema = "dbo")]
-	public class SessionAdd : BaseModel
+	public class SessionAdd : BaseEntity
 	{
 		[Column("IdSessionsAdd")]
 		public int IdSessionsAdd { get; set; }

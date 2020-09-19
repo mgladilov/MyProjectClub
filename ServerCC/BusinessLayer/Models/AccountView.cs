@@ -12,17 +12,17 @@
 
 		public string Address { get; set; }
 
-		public int IsBlocked { get; set; }
+		public bool IsBlocked { get; set; }
 
-		public int IsPrivileged { get; set; }
+		public bool IsPrivileged { get; set; }
 
 		public int PrivilegedDiscount { get; set; }
 
 		public int ZeroBalance { get; set; }
 
-		public float Balance { get; set; }
+		public double Balance { get; set; }
 
-		public float Summary { get; set; }
+		public double Summary { get; set; }
 
 		public string Remark { get; set; }
 	}

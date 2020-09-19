@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BusinessLayer.Models
+namespace DataLayer.Model
 {
 	public interface IBaseEntity
 	{
@@ -10,7 +10,7 @@ namespace BusinessLayer.Models
 		bool IsDeleted { get; set; }
 	}
 	
-	public class BaseModel : IBaseEntity
+	public class BaseEntity : IBaseEntity
 	{
 		[Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		[Column("Id")]

@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BusinessLayer.Models
+namespace DataLayer.Model
 {
 	[Table("ComputerGroups", Schema = "dbo")]
-	public class ComputerGroup : BaseModel
+	public class ComputerGroup : BaseEntity
 	{ 
 		[Column("Name")]
 		public string Name { get; set; }

@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BusinessLayer.Models
+namespace DataLayer.Model
 {
 	[Table("Accounts", Schema = "dbo")]
-	public class Account : BaseModel
+	public class Account : BaseEntity
 	{
 		[Column("Name")]
 		public string Name { get; set; }
@@ -21,10 +21,10 @@ namespace BusinessLayer.Models
 		public string Address { get; set; }
 
 		[Column("IsBlocked")]
-		public int IsBlocked { get; set; }
+		public bool IsBlocked { get; set; }
 
 		[Column("IsPrivileged")]
-		public int IsPrivileged { get; set; }
+		public bool IsPrivileged { get; set; }
 
 		[Column("PrivilegedDiscount")]
 		public int PrivilegedDiscount { get; set; }
@@ -33,10 +33,10 @@ namespace BusinessLayer.Models
 		public int ZeroBalance { get; set; }
 
 		[Column("Balance")]
-		public float Balance { get; set; }
+		public double Balance { get; set; }
 
 		[Column("Summary")]
-		public float Summary { get; set; }
+		public double Summary { get; set; }
 
 		[Column("Remark")]
 		public string Remark { get; set; }

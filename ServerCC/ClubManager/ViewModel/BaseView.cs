@@ -1,24 +1,14 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text;
+using ClubManager.Annotations;
 
-namespace BusinessLayer.Models
+namespace ClubManager.ViewModel
 {
-	public interface IBaseModel
+	public class BaseView : INotifyPropertyChanged
 	{
-		int Id { get; set; }
-
-		bool IsDeleted { get; set; }
-	}
-
-	public class BaseModel : IBaseModel, INotifyPropertyChanged
-	{
-		public int Id { get; set; }
-
-		public bool IsDeleted { get; set; }
-
-
-		#region INotif
-
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		[NotifyPropertyChangedInvocator]
@@ -26,8 +16,5 @@ namespace BusinessLayer.Models
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
-
-		#endregion
-
 	}
 }

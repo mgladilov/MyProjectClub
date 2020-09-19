@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BusinessLayer.Models
+namespace DataLayer.Model
 {
 	[Table("Tarifs", Schema = "dbo")]
-	public class Tarif : BaseModel
+	public class Tarif : BaseEntity
 	{
 		[Column("Name")]
 		public string Name { get; set; }

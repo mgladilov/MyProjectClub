@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using AutoMapper;
 using BusinessLayer.Extensions;
 using BusinessLayer.Models;
 using ClubManager.Helpers;
 using DataLayer;
+using DataLayer.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ClubManager.ViewModel
 {
@@ -18,6 +16,7 @@ namespace ClubManager.ViewModel
 	{
 		private readonly DataBaseContext _context;
 		private readonly IMapper _mapper;
+		private readonly IServiceProvider _provider;
 
 		public ObservableCollection<ComputerView> Computers { get; set; }
 		public ObservableCollection<ComputerGroupView> ComputersGroups { get; set; }
@@ -28,10 +27,11 @@ namespace ClubManager.ViewModel
 
 		}
 
-		public MainWindowView(DataBaseContext context, IMapper mapper)
+		public MainWindowView(DataBaseContext context, IMapper mapper, IServiceProvider provider)
 		{
 			_context = context;
 			_mapper = mapper;
+			_provider = provider;
 		}
 				
 
@@ -71,10 +71,10 @@ namespace ClubManager.ViewModel
 						_context.Entry(local).State = EntityState.Detached;
 
 					_context.Attach(computer);
-					if (computer.Id > 0)
-						_context.Entry(computer).State = EntityState.Modified;
-					else
-						_context.Entry(computer).State = EntityState.Added;
+					//if (computer.Id > 0)
+					//	_context.Entry(computer).State = EntityState.Modified;
+					//else
+					//	_context.Entry(computer).State = EntityState.Added;
 
 					_context.SaveChanges();
 				});
@@ -103,5 +103,17 @@ namespace ClubManager.ViewModel
 			}
 		}
 
+		private RelayCommand _setting;
+		public RelayCommand Setting
+		{
+			get
+			{
+				return _setting ??= new RelayCommand(o =>
+				{
+					var window = _provider.GetService<SettingsWindow>();
+					window.Show();
+				});
+			}
+		}
 	}
 }
