@@ -13,7 +13,7 @@
 		
 		public SettingView()
 		{
-			
+			Title = "Settings";
 		}
 		
 		public ComputerTabView ComputerTabView

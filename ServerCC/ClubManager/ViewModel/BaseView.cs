@@ -9,6 +9,8 @@ namespace ClubManager.ViewModel
 {
 	public class BaseView : INotifyPropertyChanged
 	{
+		public string Title { get; set; }
+
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		[NotifyPropertyChangedInvocator]
