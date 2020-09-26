@@ -59,6 +59,7 @@ namespace ClubManager
 			services.AddSingleton<SettingView>();
 			services.AddSingleton<ComputerTabView>();
 			services.AddSingleton<AccountTabView>();
+			services.AddSingleton<TariffTabView>();
 		}
 	}
 }

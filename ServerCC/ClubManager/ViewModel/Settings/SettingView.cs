@@ -4,11 +4,13 @@
 	{
 		private ComputerTabView _computerTabView;
 		private AccountTabView _accountTabView;
+		private TariffTabView _tariffTabView;
 
-		public SettingView(ComputerTabView computerTabView, AccountTabView accountTabView) :this()
+		public SettingView(ComputerTabView computerTabView, AccountTabView accountTabView, TariffTabView tariffTabView) :this()
 		{
 			_computerTabView = computerTabView;
 			_accountTabView = accountTabView;
+			_tariffTabView = tariffTabView;
 		}
 		
 		public SettingView()
@@ -26,6 +28,12 @@
 		{
 			get => _accountTabView;
 			set => _accountTabView = value;
+		}
+
+		public TariffTabView TariffTabView
+		{
+			get => _tariffTabView;
+			set => _tariffTabView = value;
 		}
 	}
 }

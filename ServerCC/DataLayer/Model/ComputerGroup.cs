@@ -11,5 +11,6 @@ namespace DataLayer.Model
 
 
 		public ICollection<Computer> Computers { get; set; }
+		public ICollection<TariffInterval> TariffIntervals { get; set; }
 	}
 }

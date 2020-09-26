@@ -14,6 +14,7 @@ namespace DataLayer
 		public DbSet<Computer> Computers { get; set; }
 		public DbSet<ComputerGroup> ComputerGroups { get; set; }
 		public DbSet<Account> Accounts { get; set; }
+		public DbSet<TariffInterval> TariffIntervals { get; set; }
 
 
 		//public override int SaveChanges()

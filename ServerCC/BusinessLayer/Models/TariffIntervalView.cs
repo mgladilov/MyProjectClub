@@ -2,9 +2,9 @@
 
 namespace BusinessLayer.Models
 {
-	public class TarifIntervalView : BaseModel
+	public class TariffIntervalView : BaseModel
 	{
-		public int IdTarifs { get; set; }
+		public int IdGroup { get; set; }
 
 		public string Name { get; set; }
 
@@ -14,7 +14,7 @@ namespace BusinessLayer.Models
 
 		public float Cost { get; set; }
 
-		public int IsPacket { get; set; }
+		public bool IsPacket { get; set; }
 
 		public string Condition { get; set; }
 

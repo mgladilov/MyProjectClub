@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:settings="clr-namespace:ClubManager.ViewModel.Settings"
+        xmlns:Converter="clr-namespace:ClubManager.Converters"
         mc:Ignorable="d"
         Title="{Binding Path=Title}" Height="550" Width="850">
     <Window.DataContext>
@@ -12,6 +13,7 @@
     </Window.DataContext>
     <Window.Resources>
         <CollectionViewSource x:Key="Groups" Source="{Binding ComputerTabView.ComputerGroups}"></CollectionViewSource>
+        <Converter:EnumConverter x:Key="EnumConverter"/>
     </Window.Resources>
     <Grid>
         <TabControl TabStripPlacement="Left">
@@ -145,8 +147,43 @@
                 </Grid>
 
             </TabItem>
-            <TabItem Header="Тарифы">
-                <Grid Background="#FFE5E5E5"/>
+            <TabItem Header="Тарифы" DataContext="{Binding Path=TariffTabView}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Path=ComputerGroups, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding Path=SelectedGroup, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Path=Name}" Header="Группы" MinWidth="130"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <DataGrid Grid.Column="1" Margin="15 0 0 0" AutoGenerateColumns="False" ItemsSource="{Binding Path=TariffIntervals, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                              SelectedItem="{Binding Path= SelectedInterval, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Path=Name}" Header="Название"/>
+                            <DataGridTextColumn Binding="{Binding Path=Start, StringFormat=\{0:HH:mm\}}" MinWidth="70" Header="От"/>
+                            <DataGridTextColumn Binding="{Binding Path=Stop, StringFormat=\{0:HH:mm\}}" MinWidth="70" Header="До"/>
+                            <DataGridTextColumn Binding="{Binding Path=Cost}" Header="Цена"/>
+                            <DataGridTextColumn Binding="{Binding Path=IsPacket}" Header="Тип"/>
+                            <DataGridTextColumn Binding="{Binding Path=DaysOfWeek, Converter={StaticResource EnumConverter}}" Header="Дни недели"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <StackPanel Grid.Row="1">
+                        <CheckBox IsChecked="{Binding Path=SelectedInterval.IsMonday, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Понедельник"></CheckBox>
+                        <CheckBox IsChecked="{Binding Path=SelectedInterval.IsTuesday, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Вторник"></CheckBox>
+                        <CheckBox IsChecked="{Binding Path=SelectedInterval.IsWednesday, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Среда"></CheckBox>
+                        <CheckBox IsChecked="{Binding Path=SelectedInterval.IsThursday, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Четверг"></CheckBox>
+                        <CheckBox IsChecked="{Binding Path=SelectedInterval.IsFriday, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Пятница"></CheckBox>
+                        <CheckBox IsChecked="{Binding Path=SelectedInterval.IsSaturday, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Суббота"></CheckBox>
+                        <CheckBox IsChecked="{Binding Path=SelectedInterval.IsSunday, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Воскресенье"></CheckBox>
+                    </StackPanel>
+
+                </Grid>
             </TabItem>
         </TabControl>
 
