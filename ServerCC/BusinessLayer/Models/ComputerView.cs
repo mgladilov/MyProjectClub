@@ -37,6 +37,7 @@
 			{
 				if (Equals(value, _computerGroup)) return;
 				_computerGroup = value;
+				IdGroup = value.Id;
 				OnPropertyChanged();
 			}
 		}

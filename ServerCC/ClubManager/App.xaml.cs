@@ -5,9 +5,11 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
 using AutoMapper;
+using BusinessLayer.Repositories;
 using ClubManager.ViewModel;
 using ClubManager.ViewModel.Settings;
 using DataLayer;
+using DataLayer.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +30,8 @@ namespace ClubManager
 			Configuration = builder.Build();
 			var services = new ServiceCollection();
 			ConfigureServices(services);
+			ConfigureRepository(services);
+
 
 			var all = Assembly
 				.GetEntryAssembly()
@@ -49,6 +53,14 @@ namespace ClubManager
 			ServiceProvider = services.BuildServiceProvider();
 			var mainForm = ServiceProvider.GetRequiredService<MainWindow>();
 			mainForm.Show();
+		}
+
+		private void ConfigureRepository(ServiceCollection services)
+		{
+			services.AddScoped<IRepository<Computer>, Repository<Computer>>();
+			services.AddScoped<IRepository<ComputerGroup>, Repository<ComputerGroup>>();
+			services.AddScoped<IRepository<Account>, Repository<Account>>();
+			services.AddScoped<IRepository<TariffInterval>, Repository<TariffInterval>>();
 		}
 
 		private void ConfigureServices(ServiceCollection services)

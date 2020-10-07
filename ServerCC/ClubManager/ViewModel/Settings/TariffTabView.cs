@@ -1,21 +1,30 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
+using AutoMapper;
+using BusinessLayer.Extensions;
+using BusinessLayer.Models;
+using BusinessLayer.Repositories;
+using ClubManager.Helpers;
 using DataLayer;
+using DataLayer.Extensions;
 using DataLayer.Model;
 
 namespace ClubManager.ViewModel.Settings
 {
 	public class TariffTabView : BaseView
 	{
-		private readonly DataBaseContext _context;
-		private ComputerGroup _selectedGroup;
-		private ObservableCollection<TariffInterval> _tariffIntervals;
-		private TariffInterval _selectedInterval;
+		private readonly IMapper _mapper;
+		private readonly IRepository<TariffInterval> _tariffIntervalRepo;
+		private readonly IRepository<ComputerGroup> _computerGroupRepo;
 
-		public ObservableCollection<ComputerGroup> ComputerGroups { get; set; }
+		private ComputerGroupView _selectedGroup;
+		private ObservableCollection<TariffIntervalView> _tariffIntervals;
+		private TariffIntervalView _selectedInterval;
+		public ObservableCollection<ComputerGroupView> ComputerGroups { get; set; }
 
-		public ObservableCollection<TariffInterval> TariffIntervals
+		public ObservableCollection<TariffIntervalView> TariffIntervals
 		{
 			get => _tariffIntervals;
 			set
@@ -26,9 +35,9 @@ namespace ClubManager.ViewModel.Settings
 			}
 		}
 
-		public List<TariffInterval> TariffIntervalTemp { get; set; }
+		public List<TariffIntervalView> TariffIntervalTemp { get; set; }
 
-		public ComputerGroup SelectedGroup
+		public ComputerGroupView SelectedGroup
 		{
 			get => _selectedGroup;
 			set
@@ -40,7 +49,7 @@ namespace ClubManager.ViewModel.Settings
 			}
 		}
 
-		public TariffInterval SelectedInterval
+		public TariffIntervalView SelectedInterval
 		{
 			get => _selectedInterval;
 			set
@@ -51,28 +60,83 @@ namespace ClubManager.ViewModel.Settings
 			}
 		}
 
-		private void OnSelected(ComputerGroup value)
+		private void OnSelected(ComputerGroupView value)
 		{
 			if(value == null)
 				return;
-			TariffIntervals = new ObservableCollection<TariffInterval>(TariffIntervalTemp.Where(i => i.IdGroup == value.Id));
+			TariffIntervals = new ObservableCollection<TariffIntervalView>(TariffIntervalTemp.Where(i => i.IdGroup == value.Id));
 
 		}
 
-		public TariffTabView(DataBaseContext context)
+		public TariffTabView()
 		{
-			_context = context;
-			Title = "Tariff";
+			
+		}
+
+		public TariffTabView(IMapper mapper,
+			IRepository<TariffInterval> tariffIntervalRepo,
+			IRepository<ComputerGroup> computerGroupRepo)
+		{
+			_mapper = mapper;
+			_tariffIntervalRepo = tariffIntervalRepo;
+			_computerGroupRepo = computerGroupRepo;
 		}
 
 		public void Load()
 		{
-			var computerGroups = _context.ComputerGroups.Where(i => !i.IsDeleted).ToList();
-			var tariffInterval = _context.TariffIntervals.Where(i => !i.IsDeleted).ToList();
+			var computerGroups = _computerGroupRepo.GetAll().OnlyActive().ToList();
+			var computerGroupView = _mapper.MapToBlView<ComputerGroup, ComputerGroupView>(computerGroups);
 
-			ComputerGroups = new ObservableCollection<ComputerGroup>(computerGroups);
+			var tariffInterval = _tariffIntervalRepo.GetAll().OnlyActive().ToList();
+			var tariffIntervalView = _mapper.MapToBlView<TariffInterval, TariffIntervalView>(tariffInterval);
+
+			ComputerGroups = new ObservableCollection<ComputerGroupView>(computerGroupView);
 			//TariffIntervals = new ObservableCollection<TariffInterval>(tariffInterval);
-			TariffIntervalTemp = new List<TariffInterval>(tariffInterval);
+			TariffIntervalTemp = new List<TariffIntervalView>(tariffIntervalView);
 		}
+
+		#region Update
+
+		private RelayCommand _update;
+
+		public RelayCommand Update
+		{
+			get
+			{
+				return _update ??= new RelayCommand(o =>
+				{
+					var updated = TariffIntervals.Where(i => i.IsModified);
+					foreach (var view in updated)
+					{
+						var interval = _mapper.MapToEntity<TariffIntervalView, TariffInterval>(view);
+						interval.IdGroup = SelectedGroup.Id;
+						var entity = _tariffIntervalRepo.Save(interval);
+						view.Id = entity.Id;
+					}
+					Load();
+				});
+			}
+		}
+
+		#endregion
+
+		#region Delete
+
+		private RelayCommand _delete;
+		public RelayCommand Delete
+		{
+			get
+			{
+				return _delete ??= new RelayCommand(o =>
+				{
+					if (SelectedInterval == null)
+						return;
+					_tariffIntervalRepo.Delete(SelectedInterval.Id);
+					TariffIntervals.Remove(SelectedInterval);
+				});
+			}
+		}
+
+		#endregion
 	}
 }

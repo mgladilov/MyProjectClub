@@ -16,6 +16,8 @@ namespace BusinessLayer.Models
 
 		public bool IsDeleted { get; set; }
 
+		public bool IsModified { get; set; }
+
 
 		#region INotif
 
@@ -24,7 +26,11 @@ namespace BusinessLayer.Models
 		[NotifyPropertyChangedInvocator]
 		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 		{
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+			if (PropertyChanged != null)
+			{
+				IsModified = true;
+				PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 
 		#endregion

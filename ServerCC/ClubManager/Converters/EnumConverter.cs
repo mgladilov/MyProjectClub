@@ -39,16 +39,16 @@ namespace ClubManager.Converters
 
 		}
 
-		public DataLayer.Model.DayOfWeek GetEnumValueFromDescription(string description)
+		public BusinessLayer.Models.DayOfWeek GetEnumValueFromDescription(string description)
 		{
 			if (description.Equals("все"))
-				return (DataLayer.Model.DayOfWeek)127;
+				return (BusinessLayer.Models.DayOfWeek)127;
 
-			var type = typeof(DataLayer.Model.DayOfWeek);
+			var type = typeof(BusinessLayer.Models.DayOfWeek);
 			var days = description.Split(',');
 			FieldInfo[] fields = type.GetFields();
 
-			DataLayer.Model.DayOfWeek res = 0;
+			BusinessLayer.Models.DayOfWeek res = 0;
 			foreach (var day in days)
 			{
 				var field = fields
@@ -57,7 +57,7 @@ namespace ClubManager.Converters
 						f, a) => new { Field = f, Att = a }).SingleOrDefault(a => ((DescriptionAttribute)a.Att)
 																				  .Description == day);
 				if (field != null)
-					res |= (DataLayer.Model.DayOfWeek)field.Field.GetRawConstantValue();
+					res |= (BusinessLayer.Models.DayOfWeek)field.Field.GetRawConstantValue();
 
 			}
 

@@ -1,49 +1,59 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using AutoMapper;
+using BusinessLayer.Extensions;
+using BusinessLayer.Models;
+using BusinessLayer.Repositories;
 using ClubManager.Helpers;
 using DataLayer;
+using DataLayer.Extensions;
 using DataLayer.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClubManager.ViewModel.Settings
 {
-	public class ComputerTabView : BaseView
+	public class ComputerTabView
 	{
-		private DataBaseContext _context;
-		private ComputerGroup _selectedGroup;
+		private readonly IMapper _mapper;
+		private readonly IRepository<Computer> _computerRepo;
+		private readonly IRepository<ComputerGroup> _computerGroupRepo;
 
-		public ObservableCollection<Computer> Computers { get; set; }
-		public ObservableCollection<ComputerGroup> ComputerGroups { get; set; }
-		public Computer SelectedComputer { get; set; }
-		public ComputerGroup SelectedGroup
+		public ObservableCollection<ComputerView> Computers { get; set; }
+		public ObservableCollection<ComputerGroupView> ComputerGroups { get; set; }
+		public ComputerView SelectedComputer { get; set; }
+		public ComputerGroupView SelectedGroup { get; set; }
+
+
+		public ComputerTabView()
 		{
-			get => _selectedGroup;
-			set
-			{
-				if (Equals(value, _selectedGroup)) return;
-				_selectedGroup = value;
-				OnPropertyChanged();
-			}
+			
 		}
 
-
-		public ComputerTabView(DataBaseContext context)
+		public ComputerTabView(IMapper mapper,
+			IRepository<Computer> computerRepo,
+			IRepository<ComputerGroup> computerGroupRepo)
 		{
-			_context = context;
+			_mapper = mapper;
+			_computerRepo = computerRepo;
+			_computerGroupRepo = computerGroupRepo;
 		}
 
 		public void Load()
 		{
-			var computers = _context.Computers.Where(i => !i.IsDeleted).OrderBy(i => i.Number).ToList();
-			var computerGroups = _context.ComputerGroups.Where(i => !i.IsDeleted).ToList();
-			
-			foreach (var view in computers)
+			var computers = _computerRepo.GetAll().OnlyActive().OrderBy(i => i.Number).ToList();
+			var computerViews = _mapper.MapToBlView<Computer, ComputerView>(computers);
+
+			var computerGroups = _computerGroupRepo.GetAll().OnlyActive().ToList();
+			var computerGroupView = _mapper.MapToBlView<ComputerGroup, ComputerGroupView>(computerGroups);
+
+
+			foreach (var view in computerViews)
 			{
-				view.ComputerGroup = computerGroups.FirstOrDefault(i => i.Id == view.IdGroup);
+				view.ComputerGroup = computerGroupView.FirstOrDefault(i => i.Id == view.IdGroup);
 			}
 
-			Computers = new ObservableCollection<Computer>(computers);
-			ComputerGroups = new ObservableCollection<ComputerGroup>(computerGroups);
+			Computers = new ObservableCollection<ComputerView>(computerViews);
+			ComputerGroups = new ObservableCollection<ComputerGroupView>(computerGroupView);
 		}
 
 		#region Button update
@@ -58,14 +68,9 @@ namespace ClubManager.ViewModel.Settings
 					if (SelectedComputer == null)
 						return;
 
-					if (SelectedComputer.Id <= 0)
-					{
-						var entity = _context.Computers.Attach(SelectedComputer);
-						entity.State = EntityState.Added;
-					}
-					_context.SaveChanges();
-
-					Load();
+					var computer = _mapper.MapToEntity<ComputerView, Computer>(SelectedComputer);
+					var entity = _computerRepo.Save(computer);
+					SelectedComputer.Id = entity.Id;
 				});
 			}
 		}
@@ -80,14 +85,9 @@ namespace ClubManager.ViewModel.Settings
 					if (SelectedGroup == null)
 						return;
 
-					if (SelectedGroup.Id <= 0)
-					{
-						var entity = _context.ComputerGroups.Attach(SelectedGroup);
-						entity.State = EntityState.Added;
-					}
-					_context.SaveChanges();
-
-					Load();
+					var computerGroup = _mapper.MapToEntity<ComputerGroupView, ComputerGroup>(SelectedGroup);
+					var entity = _computerGroupRepo.Save(computerGroup);
+					SelectedGroup.Id = entity.Id;
 				});
 			}
 		}
@@ -105,11 +105,8 @@ namespace ClubManager.ViewModel.Settings
 				{
 					if (SelectedComputer == null)
 						return;
-					SelectedComputer.IsDeleted = true;
-
+					_computerRepo.Delete(SelectedComputer.Id);
 					Computers.Remove(SelectedComputer);
-
-					_context.SaveChanges();
 				});
 			}
 		}
@@ -123,11 +120,9 @@ namespace ClubManager.ViewModel.Settings
 				{
 					if (SelectedGroup == null)
 						return;
-					SelectedGroup.IsDeleted = true;
-
+					
+					_computerGroupRepo.Delete(SelectedGroup.Id);
 					ComputerGroups.Remove(SelectedGroup);
-
-					_context.SaveChanges();
 				});
 			}
 		}

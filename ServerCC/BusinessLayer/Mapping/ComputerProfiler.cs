@@ -19,7 +19,8 @@ namespace BusinessLayer.Mapping
 				.IncludeBase<IBaseModel, IBaseEntity>()
 				.ForMember(model => model.Number, e => e.MapFrom(x => x.Number))
 				.ForMember(model => model.IpAddress, e => e.MapFrom(x => x.IpAddress))
-				.ForMember(model => model.IdGroup, e => e.MapFrom(x => x.IdGroup));
+				.ForMember(model => model.IdGroup, e => e.MapFrom(x => x.IdGroup))
+				.ForMember(model => model.ComputerGroup, e => e.Ignore());
 		}
 	}
 }

@@ -12,8 +12,8 @@
         <settings:SettingView/>
     </Window.DataContext>
     <Window.Resources>
-        <CollectionViewSource x:Key="Groups" Source="{Binding ComputerTabView.ComputerGroups}"></CollectionViewSource>
         <Converter:EnumConverter x:Key="EnumConverter"/>
+        <Converter:BoolToStringConverter x:Key="BoolToStringConverter"/>        
     </Window.Resources>
     <Grid>
         <TabControl TabStripPlacement="Left">
@@ -151,7 +151,7 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -159,29 +159,81 @@
                     </Grid.ColumnDefinitions>
                     <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Path=ComputerGroups, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding Path=SelectedGroup, UpdateSourceTrigger=PropertyChanged}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Path=Name}" Header="Группы" MinWidth="130"/>
+                            <DataGridTextColumn Binding="{Binding Path=Name}" IsReadOnly="True" Header="Группы" MinWidth="130"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <DataGrid Grid.Column="1" Margin="15 0 0 0" AutoGenerateColumns="False" ItemsSource="{Binding Path=TariffIntervals, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
                               SelectedItem="{Binding Path= SelectedInterval, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Path=Name}" Header="Название"/>
-                            <DataGridTextColumn Binding="{Binding Path=Start, StringFormat=\{0:HH:mm\}}" MinWidth="70" Header="От"/>
-                            <DataGridTextColumn Binding="{Binding Path=Stop, StringFormat=\{0:HH:mm\}}" MinWidth="70" Header="До"/>
+                            <DataGridTextColumn Binding="{Binding Path=Start, StringFormat=\{0:h\\:mm\}}" IsReadOnly="True" MinWidth="70" Header="От"/>
+                            <DataGridTextColumn Binding="{Binding Path=Stop, StringFormat=\{0:h\\:mm\}}" IsReadOnly="True" MinWidth="70" Header="До"/>
                             <DataGridTextColumn Binding="{Binding Path=Cost}" Header="Цена"/>
-                            <DataGridTextColumn Binding="{Binding Path=IsPacket}" Header="Тип"/>
-                            <DataGridTextColumn Binding="{Binding Path=DaysOfWeek, Converter={StaticResource EnumConverter}}" Header="Дни недели"/>
+                            <DataGridTextColumn Binding="{Binding Path=IsPacket, Converter={StaticResource BoolToStringConverter}, ConverterParameter='Пакетный,По часовой'}" IsReadOnly="True" Header="Тип"/>
+                            <DataGridTextColumn Binding="{Binding Path=DaysOfWeek, Converter={StaticResource EnumConverter}}" IsReadOnly="True" Header="Дни недели"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <StackPanel Grid.Row="1">
-                        <CheckBox IsChecked="{Binding Path=SelectedInterval.IsMonday, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Понедельник"></CheckBox>
-                        <CheckBox IsChecked="{Binding Path=SelectedInterval.IsTuesday, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Вторник"></CheckBox>
-                        <CheckBox IsChecked="{Binding Path=SelectedInterval.IsWednesday, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Среда"></CheckBox>
-                        <CheckBox IsChecked="{Binding Path=SelectedInterval.IsThursday, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Четверг"></CheckBox>
-                        <CheckBox IsChecked="{Binding Path=SelectedInterval.IsFriday, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Пятница"></CheckBox>
-                        <CheckBox IsChecked="{Binding Path=SelectedInterval.IsSaturday, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Суббота"></CheckBox>
-                        <CheckBox IsChecked="{Binding Path=SelectedInterval.IsSunday, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Воскресенье"></CheckBox>
-                    </StackPanel>
+                    <GroupBox Grid.Row="1" Grid.ColumnSpan="2" Header="Тарифная сетка" Padding="5">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" HorizontalAlignment="Center" Content="Название: "/>
+                            <TextBox Grid.Row="1" Grid.Column="0" Margin="5 0 5 0" Text="{Binding Path=SelectedInterval.Name, UpdateSourceTrigger=PropertyChanged}"/>
+                            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                <CheckBox IsChecked="{Binding Path=SelectedInterval.IsMonday, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Пн" Padding="0 0 5 0"></CheckBox>
+                                <CheckBox IsChecked="{Binding Path=SelectedInterval.IsTuesday, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Вт" Padding="0 0 5 0"></CheckBox>
+                                <CheckBox IsChecked="{Binding Path=SelectedInterval.IsWednesday, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Ср" Padding="0 0 5 0"></CheckBox>
+                                <CheckBox IsChecked="{Binding Path=SelectedInterval.IsThursday, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Чт" Padding="0 0 5 0"></CheckBox>
+                                <CheckBox IsChecked="{Binding Path=SelectedInterval.IsFriday, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Пт" Padding="0 0 5 0"></CheckBox>
+                                <CheckBox IsChecked="{Binding Path=SelectedInterval.IsSaturday, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Сб" Padding="0 0 5 0"></CheckBox>
+                                <CheckBox IsChecked="{Binding Path=SelectedInterval.IsSunday, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Вс" Padding="0 0 5 0"></CheckBox>
+                            </StackPanel>
+
+                            <Label Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Content="От: "/>
+                            <controls:TimePicker Grid.Row="1" Grid.Column="1" Margin="5 0 5 0" SelectedTimeFormat="Short" Culture="ru-RU" SelectedDateTime="{Binding Path=SelectedInterval.StartTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Label Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Content="До: "/>
+                            <controls:TimePicker Grid.Row="1" Grid.Column="2" Margin="5 0 5 0" SelectedTimeFormat="Short" Culture="ru-RU" SelectedDateTime="{Binding Path=SelectedInterval.StopTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Label Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center" Content="Цена: "/>
+                            <TextBox Grid.Row="1" Grid.Column="3" Margin="5 0 5 0" Text="{Binding Path=SelectedInterval.Cost, UpdateSourceTrigger=PropertyChanged}"/>
+                            
+                            <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Center">
+                                <CheckBox x:Name="IsPacketCheck" IsChecked="{Binding Path=SelectedInterval.IsPacket, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Пакетный режим" Padding="5"/>
+                                <CheckBox>
+                                    <CheckBox.Style>
+                                        <Style TargetType="CheckBox" BasedOn="{StaticResource MahApps.Styles.CheckBox}">
+                                            <Setter Property="IsChecked" Value="{Binding Path=SelectedInterval.IsNonFixed}"/>
+                                            <Setter Property="Content" Value="Незакрепленный"/>
+                                            <Setter Property="Padding" Value="5"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ElementName=IsPacketCheck, Path=IsChecked}" Value="False">
+                                                    <Setter Property="IsEnabled" Value="False"/>                                                    
+                                                    <Setter Property="IsChecked" Value="False"/>                                                    
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </CheckBox.Style>
+                                </CheckBox>
+                            </StackPanel>
+                            <StackPanel Grid.Row="3" Grid.ColumnSpan="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10"  Orientation="Horizontal">
+                                <Button Width="100" Margin="5" Content="Обновить" Command="{Binding Path=Update}" />
+                                <Button Width="100" Margin="5" Content="Удалить" Command="{Binding Path=Delete}"/>
+                            </StackPanel>
+
+                        </Grid>
+                        
+                    </GroupBox>
+                    
 
                 </Grid>
             </TabItem>
