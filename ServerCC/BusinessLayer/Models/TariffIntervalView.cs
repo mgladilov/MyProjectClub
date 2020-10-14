@@ -60,6 +60,7 @@ namespace BusinessLayer.Models
 			{
 				if (value == _stop) return;
 				_stop = value;
+				
 				OnPropertyChanged();
 			}
 		}
@@ -105,7 +106,14 @@ namespace BusinessLayer.Models
 		public bool IsNonFixed
 		{
 			get => _isNonFixed;
-			set => _isNonFixed = value;
+			set
+			{
+				if (value == _isNonFixed) return;
+				_isNonFixed = value;
+				if (_isNonFixed == true)
+					_stop = new TimeSpan(0, 0, 0);
+				OnPropertyChanged();
+			}
 		}
 
 		public string Condition { get; set; }

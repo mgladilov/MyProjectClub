@@ -65,12 +65,13 @@ namespace ClubManager.ViewModel.Settings
 			{
 				return _update ??= new RelayCommand(o =>
 				{
-					if (SelectedComputer == null)
-						return;
-
-					var computer = _mapper.MapToEntity<ComputerView, Computer>(SelectedComputer);
-					var entity = _computerRepo.Save(computer);
-					SelectedComputer.Id = entity.Id;
+					var updated = Computers.Where(i => i.IsModified);
+					foreach (var view in updated)
+					{
+						var computer = _mapper.MapToEntity<ComputerView, Computer>(view);
+						var entity = _computerRepo.Save(computer);
+						view.Id = entity.Id;
+					}
 				});
 			}
 		}
@@ -82,12 +83,13 @@ namespace ClubManager.ViewModel.Settings
 			{
 				return _updateGroup ??= new RelayCommand(o =>
 				{
-					if (SelectedGroup == null)
-						return;
-
-					var computerGroup = _mapper.MapToEntity<ComputerGroupView, ComputerGroup>(SelectedGroup);
-					var entity = _computerGroupRepo.Save(computerGroup);
-					SelectedGroup.Id = entity.Id;
+					var updated = ComputerGroups.Where(i => i.IsModified);
+					foreach (var view in updated)
+					{
+						var computerGroup = _mapper.MapToEntity<ComputerGroupView, ComputerGroup>(view);
+						var entity = _computerGroupRepo.Save(computerGroup);
+						view.Id = entity.Id;
+					}
 				});
 			}
 		}

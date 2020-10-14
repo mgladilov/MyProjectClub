@@ -61,6 +61,8 @@ namespace ClubManager
 			services.AddScoped<IRepository<ComputerGroup>, Repository<ComputerGroup>>();
 			services.AddScoped<IRepository<Account>, Repository<Account>>();
 			services.AddScoped<IRepository<TariffInterval>, Repository<TariffInterval>>();
+			services.AddScoped<IRepository<User>, Repository<User>>();
+			services.AddScoped<IRepository<UsersGroup>, Repository<UsersGroup>>();
 		}
 
 		private void ConfigureServices(ServiceCollection services)
@@ -72,6 +74,7 @@ namespace ClubManager
 			services.AddSingleton<ComputerTabView>();
 			services.AddSingleton<AccountTabView>();
 			services.AddSingleton<TariffTabView>();
+			services.AddSingleton<UserTabView>();
 		}
 	}
 }

@@ -1,11 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataLayer.Model
 {
-	[Table("UsersGroup", Schema = "dbo")]
+	[Table("UsersGroups", Schema = "dbo")]
 	public class UsersGroup : BaseEntity
 	{
 		[Column("Name")]
 		public string Name { get; set; }
+
+		public ICollection<User> Users { get; set; }
 	}
 }

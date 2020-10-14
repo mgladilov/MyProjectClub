@@ -6,64 +6,92 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClubManager.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" MinHeight="450" MinWidth="800" WindowState="Maximized">
     <Window.DataContext>
         <local:MainWindowView/>
     </Window.DataContext>
     <Window.Resources>
-        <CollectionViewSource x:Key="Groups" Source="{Binding ComputersGroups}"></CollectionViewSource>
+        
     </Window.Resources>
 
-    <Grid ShowGridLines="True">
+    <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="35"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
+            
         </Grid.RowDefinitions>
-        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Path=Computers}" SelectedItem="{Binding Path=SelectedComputer}" Margin="0,0,0,54" Grid.Row="1">
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Path=Number}" Header="№" Width="100"/>
-                <DataGridTextColumn Binding="{Binding Path=IpAddress}" Header="IP" Width="200"/>
-                <DataGridTextColumn Binding="{Binding Path=ComputerGroup.Name}" Header="Group" Width="200"/>
-                <!--<DataGridComboBoxColumn ItemsSource="{Binding Source={StaticResource Groups}}" SelectedValueBinding="{Binding Path=ComputerGroup}" DisplayMemberPath="Name" Header="Group" Width="100"/>-->
-            </DataGrid.Columns>
-        </DataGrid>
 
-        <Grid Grid.Row="1" Grid.Column="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <Label Grid.Row="0" Grid.Column="0" Content="№"/>
-            <Label Grid.Row="1" Grid.Column="0" Content="IP"/>
-            <Label Grid.Row="2" Grid.Column="0" Content="Group"/>
-
-            <TextBox Grid.Row="0" Grid.Column="1" Margin="5" Text="{Binding Path=SelectedComputer.Number, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBox Grid.Row="1" Grid.Column="1" Margin="5" Text="{Binding Path=SelectedComputer.IpAddress, UpdateSourceTrigger=PropertyChanged}"/>
-            <ComboBox Grid.Row="2" Grid.Column="1" Margin="5" ItemsSource="{Binding Path=ComputersGroups}" DisplayMemberPath="Name" SelectedItem="{Binding Path=SelectedComputer.ComputerGroup,  UpdateSourceTrigger=PropertyChanged}"/>
-        </Grid>
-
-        <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"  HorizontalAlignment="Right" Margin="10"  Orientation="Horizontal">
-            <Button Content="Обновить" Command="{Binding Path=Update}" />
-            <Button Content="Удалить" Command="{Binding Path=Delete}"/>
-        </StackPanel>
-
-        <Menu Grid.Row="0" Grid.Column="0" Height="30" VerticalAlignment="Top">
+        <Menu Grid.Row="0" Grid.Column="0" Height="30" Margin="8 0 0 0" VerticalAlignment="Top">
             <MenuItem Header="File">
                 <MenuItem Header="Exit" ></MenuItem>
             </MenuItem>
             <MenuItem Header="Настройки" Command="{Binding Path=Setting}"></MenuItem>
         </Menu>
+
+        <TextBlock Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Right" Width="80" Background="Azure" VerticalAlignment="Top" Padding="5" FontSize="20" FontFamily="Impact"
+                   Text="{Binding CurrentTime, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:HH:mm:ss}}" />
+        
+        <TabControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="10" BorderBrush="Gainsboro">
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TabItem">
+                                <Grid Name="Panel">
+                                    <ContentPresenter x:Name="ContentSite"
+                                                      VerticalAlignment="Center"
+                                                      HorizontalAlignment="Center"
+                                                      ContentSource="Header"
+                                                      Margin="10,2"/>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="Panel" Property="Background" Value="LightSkyBlue" />
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="False">
+                                        <Setter TargetName="Panel" Property="Background" Value="White" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TabControl.Resources>
+
+            <TabItem Header="Компьютеры">
+                <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Path=Computers}" SelectedItem="{Binding Path=SelectedComputer}" VerticalAlignment="Top">
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Начать работу"></MenuItem>
+                            <MenuItem Header="Завершеть работу"></MenuItem>
+                            <MenuItem Header="Пересадить"></MenuItem>
+                            <MenuItem Header="Доплатить"></MenuItem>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                    
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Path=Number}" Header="" Width="50"/>
+                        <DataGridTextColumn Binding="{Binding Path=Number}" Header="Компьютер"/>
+                        <DataGridTextColumn Binding="{Binding Path=IpAddress}" Header="Состояние"/>
+                        <DataGridTextColumn Binding="{Binding Path=IpAddress}" Header="Тариф"/>
+                        <DataGridTextColumn Binding="{Binding Path=IpAddress}" Header="Баланс"/>
+                        <DataGridTextColumn Binding="{Binding Path=IpAddress}" Header="Начало"/>
+                        <DataGridTextColumn Binding="{Binding Path=IpAddress}" Header="Конец"/>
+                        <DataGridTextColumn Binding="{Binding Path=IpAddress}" Header="Время"/>
+                        <DataGridTextColumn Binding="{Binding Path=IpAddress}" Header="Осталось"/>
+                        <DataGridTextColumn Binding="{Binding Path=IpAddress}" Header="Клиент"/>
+                        <DataGridTextColumn Binding="{Binding Path=IpAddress}" Header="Группа"/>
+                    </DataGrid.Columns>
+
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="Отчеты" />
+            <TabItem Header="Сообщения" />
+        </TabControl>
 
     </Grid>
 </mah:MetroWindow>

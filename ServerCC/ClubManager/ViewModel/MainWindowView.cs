@@ -30,6 +30,7 @@ namespace ClubManager.ViewModel
 
 		}
 
+
 		public MainWindowView(IMapper mapper,
 			IServiceProvider provider,
 			IRepository<Computer> computerRepo,

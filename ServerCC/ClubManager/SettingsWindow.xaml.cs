@@ -15,6 +15,7 @@ namespace ClubManager
 			view.ComputerTabView.Load();
 			view.AccountTabView.Load();
 			view.TariffTabView.Load();
+			view.UserTabView.Load();
 			this.DataContext = view;
 		}
 	}

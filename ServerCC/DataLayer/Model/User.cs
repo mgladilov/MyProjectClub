@@ -25,6 +25,9 @@ namespace DataLayer.Model
 
 		[Column("Remark")]
 		public string Remark { get; set; }
-		
+
+		[ForeignKey(nameof(IdUsersGroup))]
+		public UsersGroup UsersGroup{ get; set; }
+
 	}
 }
