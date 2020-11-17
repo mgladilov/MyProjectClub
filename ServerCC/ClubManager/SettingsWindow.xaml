@@ -6,6 +6,9 @@
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:settings="clr-namespace:ClubManager.ViewModel.Settings"
         xmlns:Converter="clr-namespace:ClubManager.Converters"
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+        Dialog:DialogParticipation.Register="{Binding AccountTabView}"
         mc:Ignorable="d"
         Title="{Binding Path=Title}" Height="550" Width="850" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
@@ -146,7 +149,7 @@
                     
                     <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="110"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
@@ -160,28 +163,49 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Margin="5" Content="Name"/>
-                        <Label Grid.Row="1" Margin="5" Content="Password"/>
+                        <Label Grid.Row="0" Margin="5" Content="Логин"/>
+                        <Label Grid.Row="1" Margin="5" Content="Пароль"/>
                         <Label Grid.Row="2" Margin="5" Content="Email"/>
-                        <Label Grid.Row="3" Margin="5" Content="Phone"/>
-                        <Label Grid.Row="4" Margin="5" Content="Address"/>
-                        <Label Grid.Row="5" Margin="5" Grid.ColumnSpan="2" Content="PrivilegedDiscount"/>
-                        <Label Grid.Row="6" Margin="5" Content="Balance"/>
-                        <Label Grid.Row="7" Margin="5" Content="Summary"/>
-                        <Label Grid.Row="8" Margin="5" Content="Remark"/>
+                        <Label Grid.Row="3" Margin="5" Content="Телефон"/>
+                        <Label Grid.Row="4" Margin="5" Content="Адрес"/>
+                        <Label Grid.Row="5" Margin="5" Content="Дополнительно"/>
 
                         <TextBox Grid.Row="0" Grid.Column="1" Margin="5" Text="{Binding Path=SelectedAccount.Name, UpdateSourceTrigger=PropertyChanged}"/>
                         <TextBox Grid.Row="1" Grid.Column="1" Margin="5" Text="{Binding Path=SelectedAccount.Password, UpdateSourceTrigger=PropertyChanged}"/>
                         <TextBox Grid.Row="2" Grid.Column="1" Margin="5" Text="{Binding Path=SelectedAccount.Email, UpdateSourceTrigger=PropertyChanged}"/>
                         <TextBox Grid.Row="3" Grid.Column="1" Margin="5" Text="{Binding Path=SelectedAccount.Phone, UpdateSourceTrigger=PropertyChanged}"/>
                         <TextBox Grid.Row="4" Grid.Column="1" Margin="5" Text="{Binding Path=SelectedAccount.Address, UpdateSourceTrigger=PropertyChanged}"/>
-                        <TextBox Grid.Row="5" Grid.Column="1" Width="80" Margin="5 5 80 5" Text="{Binding Path=SelectedAccount.PrivilegedDiscount, UpdateSourceTrigger=PropertyChanged}"/>
-                        <CheckBox Grid.Row="5" Grid.Column="1" Margin="5" Content="Privileged" IsChecked="{Binding Path=SelectedAccount.IsPrivileged}" HorizontalAlignment="Right"/>
-                        <TextBox Grid.Row="6" Grid.Column="1" Margin="5" Text="{Binding Path=SelectedAccount.Balance, UpdateSourceTrigger=PropertyChanged}"/>
-                        <TextBox Grid.Row="7" Grid.Column="1" Margin="5" Text="{Binding Path=SelectedAccount.Summary, UpdateSourceTrigger=PropertyChanged}"/>
-                        <TextBox Grid.Row="8" Grid.Column="1" Margin="5" Text="{Binding Path=SelectedAccount.Remark, UpdateSourceTrigger=PropertyChanged}"/>
-                        <CheckBox Grid.Column="1" Grid.Row="9" Margin="5" Content="Blocked" IsChecked="{Binding Path=SelectedAccount.IsBlocked}" HorizontalAlignment="Right"/>
+                        <TextBox Grid.Row="5" Grid.Column="1" Margin="5" Text="{Binding Path=SelectedAccount.Remark, UpdateSourceTrigger=PropertyChanged}"/>
+                        <CheckBox Grid.Column="1" Grid.Row="9" Margin="5" Content="Заблокировать" IsChecked="{Binding Path=SelectedAccount.IsBlocked}" HorizontalAlignment="Right"/>
+
+                        <GroupBox Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2"  Header="Баланс учетной записи">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Margin="5" Grid.ColumnSpan="2" Content="Скидка %"/>
+                                <Label Grid.Row="1" Margin="5" Content="Баланс"/>
+                                <Label Grid.Row="2" Margin="5" Content="Накоплено"/>
+
+                                <TextBox Grid.Row="0" Grid.Column="1" Width="50" Margin="5 5 80 5" Text="{Binding Path=SelectedAccount.PrivilegedDiscount, UpdateSourceTrigger=PropertyChanged}"/>
+                                <CheckBox Grid.Row="0" Grid.Column="1" Margin="5" Content="Скидка" IsChecked="{Binding Path=SelectedAccount.IsPrivileged}" HorizontalAlignment="Right"/>
+                                <TextBox Grid.Row="1" Grid.Column="1" Margin="5" IsReadOnly="True" Text="{Binding Path=SelectedAccount.Balance, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Grid.Row="2" Grid.Column="1" Margin="5" IsReadOnly="True" Text="{Binding Path=SelectedAccount.Summary, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                <Button Grid.Row="1" Grid.Column="2" Width="130" Margin="5" Content="Пополнить баланс" Command="{Binding Path=AddBalace}"/>
+                                <Button Grid.Row="2" Grid.Column="2" Width="130"  Margin="5" Content="Снять с баланса" Command="{Binding Path=WithdrawBalance }"/>
+                            </Grid>
+                        </GroupBox>
 
                     </Grid>
                     <StackPanel Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10"  Orientation="Horizontal">

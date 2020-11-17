@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 using AutoMapper;
 using BusinessLayer.Extensions;
 using BusinessLayer.Models;
@@ -10,6 +9,7 @@ using BusinessLayer.Repositories;
 using ClubManager.Helpers;
 using DataLayer.Extensions;
 using DataLayer.Model;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace ClubManager.ViewModel.Settings
 {
@@ -18,6 +18,7 @@ namespace ClubManager.ViewModel.Settings
 	{
 		private readonly IMapper _mapper;
 		private readonly IRepository<Account> _accountRepo;
+		private readonly IServiceProvider _provider;
 		private List<AccountView> _accountTemp;
 		private ObservableCollection<AccountView> _accounts;
 		private AccountView _selectedAccount;
@@ -51,10 +52,12 @@ namespace ClubManager.ViewModel.Settings
 		}
 
 		public AccountTabView(IMapper mapper,
-			IRepository<Account> accountRepo)
+			IRepository<Account> accountRepo,
+			IServiceProvider provider)
 		{
 			_mapper = mapper;
 			_accountRepo = accountRepo;
+			_provider = provider;
 		}
 
 
@@ -66,6 +69,8 @@ namespace ClubManager.ViewModel.Settings
 			_accountTemp = new List<AccountView>(accountViews);
 			Accounts = new ObservableCollection<AccountView>(accountViews);
 		}
+
+		#region Filter Account
 
 		private string _filterText;
 
@@ -89,6 +94,7 @@ namespace ClubManager.ViewModel.Settings
 						                                                                         .InvariantCultureIgnoreCase)));
 		}
 
+		#endregion
 
 		#region Update
 
@@ -133,5 +139,65 @@ namespace ClubManager.ViewModel.Settings
 
 		#endregion
 
+		private RelayCommand _addBalance;
+		public RelayCommand AddBalace
+		{
+			get
+			{
+				return _addBalance ??= new RelayCommand(async o =>
+				{
+					if(SelectedAccount == null)
+						return;
+					var res = await Cordinator.ShowInputAsync(this, "Добавить на счет", $"{SelectedAccount.Name} = {SelectedAccount.Balance}", new MetroDialogSettings
+					{
+						DialogResultOnCancel = MessageDialogResult.Canceled
+					});
+					if(string.IsNullOrEmpty(res))
+						return;
+					if (int.TryParse(res, out var balance))
+					{
+						SelectedAccount.Balance += balance;
+						SelectedAccount.Summary += balance;
+						var account = _mapper.MapToEntity<AccountView, Account>(SelectedAccount);
+						_accountRepo.Save(account);
+					}
+					else
+					{
+						await Cordinator.ShowMessageAsync(this, "Ошибка", "Введите цифры");
+					}
+				});
+			}
+		}
+
+		private RelayCommand _withdrawBalance;
+		public RelayCommand WithdrawBalance
+		{
+			get
+			{
+				return _withdrawBalance ??= new RelayCommand(async o =>
+				{
+					if (SelectedAccount == null)
+						return;
+					var res = await Cordinator.ShowInputAsync(this, "Снять со счета", $"{SelectedAccount.Name} = {SelectedAccount.Balance}", new MetroDialogSettings
+					{
+						DialogResultOnCancel = MessageDialogResult.Canceled
+					});
+					if (string.IsNullOrEmpty(res))
+						return;
+					if (int.TryParse(res, out var balance))
+					{
+						SelectedAccount.Balance -= balance;
+						var account = _mapper.MapToEntity<AccountView, Account>(SelectedAccount);
+						_accountRepo.Save(account);
+					}
+					else
+					{
+						await Cordinator.ShowMessageAsync(this, "Ошибка", "Введите цифры");
+					}
+				});
+			}
+		}
+
+		public IDialogCoordinator Cordinator { get; set; }
 	}
 }

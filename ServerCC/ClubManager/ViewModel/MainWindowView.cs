@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Threading;
 using AutoMapper;
 using BusinessLayer.Extensions;
 using BusinessLayer.Models;
@@ -14,7 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ClubManager.ViewModel
 {
-	public class MainWindowView
+	public class MainWindowView : BaseView
 	{
 		private readonly IMapper _mapper;
 		private readonly IServiceProvider _provider;
@@ -27,7 +28,18 @@ namespace ClubManager.ViewModel
 
 		public MainWindowView()
 		{
+			
+		}
 
+		private DispatcherTimer _timer;
+
+		public DateTime CurrentTime { get { return DateTime.Now; } }
+
+		public void TimeTest()
+		{
+			_timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+			_timer.Start();
+			_timer.Tick += (o, e) => OnPropertyChanged("CurrentTime");
 		}
 
 
@@ -56,6 +68,7 @@ namespace ClubManager.ViewModel
 
 			Computers = new ObservableCollection<ComputerView>(computerViews);
 			ComputersGroups = new ObservableCollection<ComputerGroupView>(computerGroupView);
+			TimeTest();
 		}
 
 

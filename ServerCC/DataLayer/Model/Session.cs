@@ -26,5 +26,8 @@ namespace DataLayer.Model
 
 		[Column("IdOperator")]
 		public int IdOperator { get; set; }
+
+		[Column("AdditionalInformationJSON")]
+		public string AdditionalInformationJSON { get; set; }
 	}
 }
